@@ -70,11 +70,11 @@
             display: flex;
         }
 
-        /* Responsive design for smaller screens */
+
         @media (max-width: 400px) {
             #message,
             #sendBtn {
-                width: calc(100% - 5px); /* Adjust width for smaller screens */
+                width: calc(100% - 5px); 
             }
         }
     </style>
@@ -99,35 +99,35 @@
       const messageInput = document.getElementById("message");
       const allMessages = document.getElementById("messages");
 
-      // Initialize user ID and color from server
+
       socket.on("init", (data) => {
         userId = data.userId;
         userColor = data.userColor;
       });
 
-      // Handle incoming messages
+
       socket.on("message", (messageObject) => {
         const { message, userColor } = messageObject;
 
-        // Create a new paragraph element for the message
+
         const p = document.createElement("p");
         p.innerText = message;
         p.style.color = userColor;
         p.classList.add("message");
 
-        // Append the message element to the messages div
+
         allMessages.appendChild(p);
 
-        // Scroll to the bottom of the messages div to keep the latest message in view
+
         allMessages.scrollTop = allMessages.scrollHeight;
       });
 
-      // Handle sending messages
+
       sendBtn.addEventListener("click", () => {
         const message = messageInput.value;
         socket.emit("user-message", { userId, message });
 
-        // Clear the input field
+
         messageInput.value = '';
       });
     </script>
