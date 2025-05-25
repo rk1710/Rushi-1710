@@ -26,7 +26,6 @@ pipeline {
                 sh 'ls -la chatApp'
             }
         }
-
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQubeServer') {
@@ -34,11 +33,10 @@ pipeline {
                 }
             }
         }
-
         stage('Build Docker Image') {
             steps {
-                echo 'Building the Docker image...'
-                sh 'docker build -t taharamakda/chatapp:latest -f chatApp/Dockerfile chatApp'
+                echo "Building the Docker image: ${DOCKER_IMAGE}:${IMAGE_TAG} ..."
+                sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -f chatApp/Dockerfile chatApp"
             }
         }
 
@@ -66,11 +64,13 @@ pipeline {
 
         stage('Update Image Tag in Deployment YAML') {
             steps {
-                sh "sed -i '' 's|image: $DOCKER_IMAGE:.*|image: $DOCKER_IMAGE:$IMAGE_TAG|' deploy.yml"
-                sh 'git config user.name "jenkins"'
-                sh 'git config user.email "jenkins@ci.local"'
-                sh 'git commit -am "Update image tag to $IMAGE_TAG"'
-                sh 'git push origin main'
+                dir('menifest') {
+            sh "sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|' deploy.yml"
+            sh 'git config user.name "jenkins"'
+            sh 'git config user.email "jenkins@ci.local"'
+            sh "git commit -am 'Update image tag to ${IMAGE_TAG}'"
+            sh 'git push origin main'
+                }
             }
         }
     }
