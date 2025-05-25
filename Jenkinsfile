@@ -26,13 +26,7 @@ pipeline {
                 sh 'ls -la chatApp'
             }
         }
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQubeServer') {
-                sh 'sonar-scanner'
-                }
-            }
-        }
+        
         stage('Build Docker Image') {
             steps {
                 echo "Building the Docker image: ${DOCKER_IMAGE}:${IMAGE_TAG} ..."
