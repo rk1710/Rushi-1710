@@ -7,26 +7,28 @@ pipeline {
         DOCKER_IMAGE = "taharamakda/chatapp"          
     }
 
-  stages {
-      
+    stages {
+
         stage('Cleanup Workspace') {
             steps {
                 deleteDir() 
             }
         }
+
         stage('Clone Repository') {
             steps {
                 echo 'Cloning the repository...'
                 sh 'git clone -b main https://github.com/TahaRamkda/chatApp.git'
             }
         }
+
         stage('Check Workspace Files') {
             steps {
                 sh 'ls -la'
                 sh 'ls -la chatApp'
             }
         }
-        
+
         stage('Build Docker Image') {
             steps {
                 echo "Building the Docker image: ${DOCKER_IMAGE}:${IMAGE_TAG} ..."
@@ -35,9 +37,9 @@ pipeline {
         }
 
         stage('Image Scan (Trivy)') {
-        steps {
-            sh "trivy image --scanners config --format table -o report.txt $DOCKER_IMAGE:$IMAGE_TAG || true"  
-        }
+            steps {
+                sh "trivy image --scanners config --format table -o report.txt $DOCKER_IMAGE:$IMAGE_TAG || true"
+            }
         }
 
         stage('Push to Docker Hub') {
@@ -49,9 +51,10 @@ pipeline {
                 }
             }
         }
-        stage('Clone Repository') {
+
+        stage('Clone Deployment Repository') {
             steps {
-                echo 'Cloning the repository...'
+                echo 'Cloning the deployment repo...'
                 sh 'git clone -b main https://github.com/TahaRamkda/menifest.git'
             }
         }
@@ -59,11 +62,11 @@ pipeline {
         stage('Update Image Tag in Deployment YAML') {
             steps {
                 dir('menifest') {
-            sh "sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|' deploy.yml"
-            sh 'git config user.name "jenkins"'
-            sh 'git config user.email "jenkins@ci.local"'
-            sh "git commit -am 'Update image tag to ${IMAGE_TAG}'"
-            sh 'git push origin main'
+                    sh "sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|' deploy.yml"
+                    sh 'git config user.name "jenkins"'
+                    sh 'git config user.email "jenkins@ci.local"'
+                    sh "git commit -am 'Update image tag to ${IMAGE_TAG}'"
+                    sh 'git push origin main'
                 }
             }
         }
@@ -75,4 +78,3 @@ pipeline {
         }
     }
 }
-
