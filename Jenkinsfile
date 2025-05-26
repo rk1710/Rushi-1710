@@ -62,6 +62,7 @@ pipeline {
         stage('Update Image Tag in Deployment YAML') {
             steps {
                 dir('menifest') {
+                    sh 'git remote set-url origin git@github.com:TahaRamkda/menifest.git'
                     sh "sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|' deploy.yml"
                     sh 'git config user.name "jenkins"'
                     sh 'git config user.email "jenkins@ci.local"'
