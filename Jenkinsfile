@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('dockerHub') 
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-token') 
         IMAGE_TAG = "${BUILD_NUMBER}"       
         DOCKER_IMAGE = "prasad1703/chatApp"          
     }
