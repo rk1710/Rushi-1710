@@ -31,8 +31,9 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                echo "Building the Docker image: ${DOCKER_IMAGE}:${IMAGE_TAG} ..."
-                sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -f chatApp/Dockerfile chatApp"
+                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -f chatApp/Dockerfile chatApp | tee /dev/null"
+                }
             }
         }
 
