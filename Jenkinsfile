@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-token') 
         IMAGE_TAG = "${BUILD_NUMBER}"       
-        DOCKER_IMAGE = "harry1710"          
+        DOCKER_IMAGE = "rushi-1710/chatapp"          
     }
 
     stages {
