@@ -39,7 +39,7 @@ pipeline {
 
         stage('Push to Docker Hub') {
             steps {
-                withCredentials([string(credentialsId: 'dockerhub-token', variable: 'DOCKER_HUB_TOKEN')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_HUB_USER', passwordVariable: 'DOCKER_HUB_TOKEN')]) {
                     sh """
                         echo \$DOCKER_HUB_TOKEN | docker login -u Rushi-1710 --password-stdin
                         docker push ${DOCKER_IMAGE}:${IMAGE_TAG}
