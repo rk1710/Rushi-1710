@@ -47,6 +47,13 @@ pipeline {
                 }
             }
         }
+        stage('Deploy Container') {
+            steps {
+                sh """
+                    docker run -d --name flask-container -p 5000:5000 ${DOCKER_IMAGE}:${IMAGE_TAG}
+                """
+            }
+        }
     }
 
     post {
