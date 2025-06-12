@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-token') 
         IMAGE_TAG = "${BUILD_NUMBER}"       
-        DOCKER_IMAGE = "prasad1703/chatapp"          
+        DOCKER_IMAGE = "harry1710/chatapp"          
     }
 
     stages {
@@ -18,7 +18,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 echo 'Cloning the repository...'
-                sh 'git clone -b main https://github.com/Prasad-1703/chatApp.git'
+                sh 'git clone -b main  https://github.com/rk1710/Rushi-1710.git'
             }
         }
 
