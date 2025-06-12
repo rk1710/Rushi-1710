@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerHub') 
         IMAGE_TAG = "${BUILD_NUMBER}"       
-        DOCKER_IMAGE = "taharamakda/chatapp"          
+        DOCKER_IMAGE = "prasad1703/chatApp"          
     }
 
     stages {
@@ -18,7 +18,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 echo 'Cloning the repository...'
-                sh 'git clone -b main https://github.com/TahaRamkda/chatApp.git'
+                sh 'git clone -b main https://github.com/Prasad-1703/chatApp.git'
             }
         }
 
@@ -55,14 +55,14 @@ pipeline {
         stage('Clone Deployment Repository') {
             steps {
                 echo 'Cloning the deployment repo...'
-                sh 'git clone -b main https://github.com/TahaRamkda/menifest.git'
+                sh 'git clone -b main https://github.com/Prasad-1703/manifest.git'
             }
         }
 
         stage('Update Image Tag in Deployment YAML') {
             steps {
-                dir('menifest') {
-                    sh 'git remote set-url origin git@github.com:TahaRamkda/menifest.git'
+                dir('manifest') {
+                    sh 'git remote set-url origin git@github.com:Prasad-1703/manifest.git'
                     sh "sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|' deploy.yml"
                     sh 'git config user.name "jenkins"'
                     sh 'git config user.email "jenkins@ci.local"'
