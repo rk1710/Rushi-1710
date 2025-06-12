@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-token') 
         IMAGE_TAG = "${BUILD_NUMBER}"       
-        DOCKER_IMAGE = "harry1710/chatapp"          
+        DOCKER_IMAGE = "harry1710"          
     }
 
     stages {
@@ -41,7 +41,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'dockerhub-token', variable: 'DOCKER_HUB_TOKEN')]) {
                     sh """
-                        echo \$DOCKER_HUB_TOKEN | docker login -u prasad1703 --password-stdin
+                        echo \$DOCKER_HUB_TOKEN | docker login -u Rushi-1710 --password-stdin
                         docker push ${DOCKER_IMAGE}:${IMAGE_TAG}
                     """
                 }
