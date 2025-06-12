@@ -50,7 +50,7 @@ pipeline {
         stage('Deploy Container') {
             steps {
                 sh """
-                    docker run -d --name flask-container -p 5000:5000 ${DOCKER_IMAGE}:${IMAGE_TAG}
+                    docker run -d --name chatapp -p 9000:9000 ${DOCKER_IMAGE}:${IMAGE_TAG}
                 """
             }
         }
