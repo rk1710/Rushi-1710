@@ -37,12 +37,6 @@ pipeline {
             }
         }
 
-        stage('Image Scan (Trivy)') {
-            steps {
-                sh "trivy image --scanners config --format table -o report.txt $DOCKER_IMAGE:$IMAGE_TAG || true"
-            }
-        }
-
         stage('Push to Docker Hub') {
             steps {
                 script {
