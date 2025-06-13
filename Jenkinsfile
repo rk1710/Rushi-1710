@@ -18,7 +18,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 echo 'Cloning the repository...'
-                sh 'git clone -b main https://github.com/rk1710/Rushi-1710.git'
+                sh 'git clone -b main https://github.com/Rushi-1710/chatapp.git'
             }
         }
 
@@ -32,7 +32,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                    sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -f Rushi-1710/chatApp/Dockerfile Rushi-1710/chatApp"
+                    sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -f chatApp/Dockerfile chatApp"
                 }
             }
         }
@@ -41,7 +41,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh """
-                        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                        echo $DOCKER_PASSWORD | docker login -u harry1710 --password-stdin
                         docker push ${DOCKER_IMAGE}:${IMAGE_TAG}
                     """
                 }
@@ -49,6 +49,9 @@ pipeline {
         }
 
         stage('Deploy Container') {
+             when {
+                expression { currentBuild.currentResult == 'SUCCESS' }
+            }
             steps {
                 sh """
                     docker run -d --name ${IMAGE_NAME} -p 9000:9000 ${DOCKER_IMAGE}:${IMAGE_TAG}
