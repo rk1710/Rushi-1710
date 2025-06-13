@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-token') 
         IMAGE_TAG = "${BUILD_NUMBER}"       
-        DOCKER_IMAGE = "rushi-1710/chatapp"          
+        DOCKER_IMAGE = "harry1710/chatapp"          
     }
 
     stages {
@@ -32,7 +32,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                    sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -f chatApp/Dockerfile chatApp | tee /dev/null"
+                    sh "docker build -t harry1710/chatapp:${IMAGE_TAG} -f chatApp/Dockerfile chatApp | tee /dev/null"
                 }
             }
         }
@@ -41,8 +41,8 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'dockerhub-token', variable: 'DOCKER_HUB_TOKEN')]) {
                     sh """
-                        echo \$DOCKER_HUB_TOKEN | docker login -u Rushi-1710 --password-stdin
-                        docker push ${DOCKER_IMAGE}:${IMAGE_TAG}
+                        echo \$DOCKER_HUB_TOKEN | docker login -u harry1710 --password-stdin
+                        docker push harry1710/chatapp:${IMAGE_TAG}
                     """
                 }
             }
