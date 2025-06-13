@@ -39,11 +39,11 @@ pipeline {
 
         stage('Push to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernamevariable:'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                withCredentials([string(credentialsId: 'dockerhub-token', variable:'DOCKER_HUB_TOKEN')]) {
                     sh """
-                        echo \$DOCKER_PASSWORD | docker login -u harry1710 --password-stdin
-                        docker build -t harry1710/chatapp:${IMAGE_TAG} -f chatApp/Dockerfile chatApp
-                        docker push harry1710/chatapp:${IMAGE_TAG}
+                        echo $DOCKER_HUB_TOKEN | docker login -u harry1710 --password-stdin
+                        docker build -t harry1710/chatapp:$BUILD_NUMBER -f chatApp/Dockerfile chatApp
+                        docker push harry1710/chatapp:$BUILD_NUMBER
                     """
                 }
             }
