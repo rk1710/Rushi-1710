@@ -18,7 +18,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                    sh "docker build -t harry1710/chatapp:${IMAGE_TAG} -f chatApp/Dockerfile chatApp"
+                    sh "docker build -t harry1710/chatapp:${IMAGE_TAG} . chatApp"
                 }
             }
         }
