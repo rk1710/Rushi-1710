@@ -2,45 +2,55 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_TAG = "${BUILD_NUMBER}"
-        IMAGE_NAME = "chatapp"
-        DOCKER_IMAGE = "harry1710/${IMAGE_NAME}"
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-token') 
+        IMAGE_TAG = "${BUILD_NUMBER}"       
+        DOCKER_IMAGE = "harry1710/chatapp"          
     }
 
     stages {
 
         stage('Cleanup Workspace') {
             steps {
-                deleteDir()
+                deleteDir() 
+            }
+        }
+
+        stage('Clone Repository') {
+            steps {
+                echo 'Cloning the repository...'
+                sh 'git clone -b main https://github.com/rk1710/Rushi-1710.git'
+            }
+        }
+
+        stage('Check Workspace Files') {
+            steps {
+                sh 'ls -la'
+                sh 'ls -la chatApp'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                    sh "docker build -t harry1710/chatapp:${IMAGE_TAG} . chatApp"
+                    sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -f chatApp/Dockerfile chatApp | tee /dev/null"
                 }
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                withCredentials([string(credentialsId: 'dockerhub-token', variable: 'DOCKER_HUB_TOKEN')]) {
                     sh """
-                        echo $DOCKER_PASSWORD | docker login -u harry1710 --password-stdin
-                        docker push harry1710/chatapp:${IMAGE_TAG}
+                        echo \$DOCKER_HUB_TOKEN | docker login -u harry1710 --password-stdin
+                        docker push ${DOCKER_IMAGE}:${IMAGE_TAG}
                     """
                 }
             }
         }
-
         stage('Deploy Container') {
-             when {
-                expression { currentBuild.currentResult == 'SUCCESS' }
-            }
             steps {
                 sh """
-                    docker run -d --name ${IMAGE_NAME} -p 9000:9000 ${DOCKER_IMAGE}:${IMAGE_TAG}
+                    docker run -d --name chatapp -p 9000:9000 ${DOCKER_IMAGE}:${IMAGE_TAG}
                 """
             }
         }
