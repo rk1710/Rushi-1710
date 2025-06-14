@@ -32,7 +32,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                    sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -f chatApp/Dockerfile chatApp | tee /dev/null"
+                    sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -f Rushi-1710/Dockerfile chatApp | tee /dev/null"
                 }
             }
         }
