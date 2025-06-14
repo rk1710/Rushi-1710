@@ -15,13 +15,6 @@ pipeline {
             }
         }
 
-        stage('Clone Repository') {
-            steps {
-                echo 'Cloning the repository...'
-                sh 'git clone -b main https://github.com/Rushi-1710/chatapp.git'
-            }
-        }
-
         stage('Check Workspace Files') {
             steps {
                 sh 'ls -la'
