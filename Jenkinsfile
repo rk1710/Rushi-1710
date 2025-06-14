@@ -25,7 +25,7 @@ pipeline {
         stage('Check Workspace Files') {
             steps {
                 sh 'ls -la'
-                sh 'ls -la chatApp'
+                sh 'ls -la Rushi-1710'
             }
         }
 
