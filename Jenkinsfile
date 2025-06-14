@@ -15,13 +15,6 @@ pipeline {
             }
         }
 
-        stage('Check Workspace Files') {
-            steps {
-                sh 'ls -la'
-                sh 'ls -la Rushi-1710'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
